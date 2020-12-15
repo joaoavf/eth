@@ -34,8 +34,8 @@ contract Campaign {
         _;
     }
 
-    function Campaign(uint minimum, address manager) public {
-        manager = manager;
+    function Campaign(uint minimum, address creator) public {
+        manager = creator;
         minimumContribution = minimum;
 
     }
@@ -52,9 +52,9 @@ contract Campaign {
         
         Request memory request = Request({description: description,
                                    value: value,
-                                   recipient: recipient:
+                                   recipient: recipient,
                                    complete: false,
-                                   approvalCount: 0})
+                                   approvalCount: 0});
 
         requests.push(request);
 
@@ -64,13 +64,13 @@ contract Campaign {
         Request storage request = requests[index];
 
         require(approvers[msg.sender]);
-        require(!request.approvals[msg.sender]]);
+        require(!request.approvals[msg.sender]);
 
         request.approvals[msg.sender] = true;
         request.approvalCount++;
     }
 
-    function finalizeRequest(uint index) public restrict {
+    function finalizeRequest(uint index) public restricted {
         Request storage request = requests[index];
 
         require(!request.complete);
@@ -79,4 +79,4 @@ contract Campaign {
         request.recipient.transfer(request.value);
         request.complete = true;  
     }
-};
+}
